@@ -67,7 +67,7 @@ app.post('/submit-product', async (req, res) => {
 const OpenAI = require('openai');
 
 const openai = new OpenAI({
-  apiKey: "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", // defaults to process.env["OPENAI_API_KEY"]
+  apiKey: process.env["OPENAIAPI"], // defaults to process.env["OPENAI_API_KEY"]
 });
 
 app.post('/chat', async (req, res) => {
