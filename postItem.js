@@ -23,7 +23,7 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-const port = 3000;
+const port = 5000;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -62,3 +62,29 @@ app.post('/submit-product', async (req, res) => {
 // app.get('/', (req, res) => {
 //     res.sendFile(__dirname + '/postItem.html');
 //   });
+
+
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env["OPENAIAPI"], // defaults to process.env["OPENAI_API_KEY"]
+});
+
+app.post('/chat', async (req, res) => {
+  const userMessage = req.body.message;
+  console.log("userMessage", userMessage);
+  try {
+    // Generate a response using OpenAI's ChatGPT
+    
+    const response = await openai.chat.completions.create({
+      model: "gpt-4-1106-preview", // Replace with your desired model
+      messages: [{ role: "user", content: userMessage }]
+    });
+    // console.log("response", response["choices"][0].message.content);
+    const reply = response["choices"][0].message.content.trim();
+    res.json({ reply });
+  } catch (error) {
+    console.error("Error in OpenAI response:", error);
+    res.status(500).send("Error processing your request");
+  }
+});
